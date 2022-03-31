@@ -3,11 +3,14 @@ import { getSudoku } from "sudoku-gen";
 import React, { Component } from "react";
 const solution = [];
 let TIME = 1000;
+var timeout = 0;
+
 const emptyGame = [[0,0,0,0,0,0,0,0,0], [0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0]]
 
 class Board extends Component {
   state = {
     puzzle: emptyGame,
+    stopSolve: false,
   };
   checkSol = (event) => {
       console.log(event.target)
@@ -16,6 +19,12 @@ class Board extends Component {
       this.setState({
           puzzle: emptyGame
       })
+  }
+  handleStop = (event)=> {
+    while(timeout >= 0){
+        clearTimeout(timeout);
+        timeout--;
+    }
   }
   handleSolve = (event) => {
       console.log("button clicked")
@@ -64,7 +73,7 @@ class Board extends Component {
       for (let col = 0; col < grid.length; col++) {
         if (grid[row][col] === 0) {
           for (let guess = 1; guess < 10; guess++) {
-            this.fillCell(row,col,guess);
+            timeout = setTimeout (()=>{this.fillCell(row,col,guess)}, TIME +=50);
             if (this.isValid(guess, row, col, grid)) {
             // await this.delay(1000)
               grid[row][col] = guess;
@@ -72,10 +81,10 @@ class Board extends Component {
                 return true;
               }
               grid[row][col] = 0;
-              this.emptyCell(row, col);
+              timeout = setTimeout(()=>{this.emptyCell(row, col)},TIME +=50);
             }
           }
-          this.emptyCell(row, col)
+          timeout = setTimeout(()=>{this.emptyCell(row, col)},TIME +=50);
           return false;
         }
       }
@@ -108,21 +117,21 @@ class Board extends Component {
     return true;
   }
   fillCell(row, col, guess) {
-    setTimeout( function() {const selected =
+    const selected =
       document.querySelector(".board").childNodes[row].childNodes[col];
     selected.focus();
     
     selected.value = guess;
-    console.log("fillcell "+ guess + ' '+ row+col)}, TIME+=50)
+    console.log("fillcell "+ guess + ' '+ row+col)
   }
   
   emptyCell(row,col) {
-    setTimeout( function() {const selected =
+    const selected =
         document.querySelector(".board").childNodes[row].childNodes[col];
       selected.focus();
       
       selected.value = "";
-      console.log("emptyCell "+ row+col)}, TIME+=50)
+      console.log("emptyCell "+ row+col)
   }
   render() {
     return (
@@ -145,6 +154,7 @@ class Board extends Component {
           <button onClick={this.handleSolve}>Solve</button>
           <button onClick={this.handleNew}>New Game</button>
           <button onClick={this.handleClear}>Clear</button>
+          <button onClick={this.handleStop}>Stop</button>
         </div>
       </div>
     );
