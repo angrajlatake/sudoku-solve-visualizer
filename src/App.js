@@ -1,18 +1,22 @@
-import Header from "./components/Header/Header.jsx";
-import "./App.scss";
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+} from "react-router-dom/cjs/react-router-dom.min";
+import Board from "./pages/Board/Board";
 
-import Board from "./components/Board/Board.jsx";
-import Navbar from './components/Navbar/Navbar.jsx'
+
 function App() {
+
+
   return (
     <div className="App">
-      <div>
-        <Header />
-        <Navbar/>
-      </div>
-      <div>
-        <Board />
-      </div>
+      {/* <Router>
+        <Switch>
+          <Route path ='/' exact component={Board}/>
+        </Switch>
+      </Router> */}
+      <Board/>
     </div>
   );
 }
