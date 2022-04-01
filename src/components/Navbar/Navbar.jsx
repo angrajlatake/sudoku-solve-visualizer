@@ -1,6 +1,6 @@
 import "./Navbar.scss";
 import Timer from "../Timer/Timer";
-function Navbar({ dev, level, start, clear, check, timer }) {
+function Navbar({ dev, level, start, clear, check, timer,submit }) {
   return (
     <div className="nav">
       <ul className="list">
@@ -36,7 +36,7 @@ function Navbar({ dev, level, start, clear, check, timer }) {
         <li className="list__item" onClick={check}>
           Check
         </li>
-        <li className="list__item" onClick={clear}>
+        <li className="list__item" onClick={submit}>
           Submit
         </li>
       </ul>

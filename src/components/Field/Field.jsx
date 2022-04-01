@@ -4,7 +4,7 @@ function Field({col, checkInput, id, checkSol}) {
     <input
     className={col === 0 ? "empty input" : "number input"}
     type="text"
-    value={col === 0 ? "" : col}
+    defaultValue={col === 0 ? "" : col}
     onChange={checkInput}
     data-id = {id}
     onClick={checkSol}

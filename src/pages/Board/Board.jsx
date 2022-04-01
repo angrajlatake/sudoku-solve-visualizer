@@ -43,19 +43,20 @@ class Board extends Component {
     const re = /[1-9]/;
     if (!re.test(field) || field.length >= 2 ){
       console.log('checking if')
-      event.target.value = ''
+      event.target.value = 0
     } else {
       console.log('getting else')
       const index = event.target.dataset.id
       const col = index % 9
       const row = (index - col)/9
       const number = parseInt(event.target.value)
+      id = 0
       const puzzle = this.state.puzzle
+      console.log(this.state.puzzle)
       puzzle[row][col] = number
       this.setState({
         puzzle:puzzle
       })
-
       console.log (index, col, row)
       this.showRepeat(number, row, col, this.state.puzzle)
       this.setState({
