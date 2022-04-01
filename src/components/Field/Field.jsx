@@ -7,7 +7,6 @@ function Field({col, checkInput, id, checkSol}) {
     defaultValue={col === 0 ? null : col}
     onChange={checkInput}
     data-id = {id}
-    onClick={checkSol}
   />
   );
 }

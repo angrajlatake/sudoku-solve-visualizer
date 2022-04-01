@@ -82,3 +82,12 @@
     font-weight: bold;
 
 }
+.showEmptyField {
+    background-color: rgba(139, 84, 84, 0.363);
+}
+.correctField {
+    background-color: rgba(156, 230, 36, 0.575);
+}
+.incorrectField {
+    background-color: rgba(230, 75, 36, 0.575);
+}
