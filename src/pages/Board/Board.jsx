@@ -219,7 +219,91 @@ class Board extends Component {
     }
     return true;
   }
+  solveByHeuristic(grid){
+    const mainList = [];
+    for (let row = 0; row < grid.length; row++){
+      for (let col = 0; col < grid.length; col++) {
+        const list = [1,2,3,4,5,6,7,8,9]
+        if (grid[row][col] === 0) {
+          this.hIsValid(row, col, grid, list, mainList)
+        }
+      }
+    }
+    console.log("sorting list")
+    mainList.sort((a,b) =>{
+      return a.list.length - b.list.length
+    })
+    console.log(mainList)
 
+    if (this.heuristicHelper(mainList, grid)){
+      return true
+    }
+  }
+  heuristicHelper(mainList, grid){
+    console.log(mainList)
+    mainList.sort((a,b) =>{
+      return a.list.length - b.list.length
+    })
+    for (let i = 0; i < mainList.length; i++){
+
+      const item = mainList[i]
+      const row = item.row;
+      const col = item.col;
+      const list = item.list
+      console.log(item, i)
+      for (let j = 0; j < list.length; j++){
+        const guess = list[j];
+        console.log(guess)
+        timeout = setTimeout(() => {
+          this.fillCell(row, col, guess);
+        }, (TIME += 50));
+        if (this.isValid(guess, row, col, grid)){
+          grid[row][col] = guess;
+          this.removeItem(mainList, item)
+
+          if (this.heuristicHelper(mainList,grid)){
+            return true
+          }
+          mainList.unshift(item)
+          grid[row][col] = 0; 
+          timeout = setTimeout(() => {
+            this.emptyCell(row, col);
+          }, (TIME += 50));
+        }
+      }
+      timeout = setTimeout(() => {
+        this.emptyCell(row, col);
+      }, (TIME += 50));
+      return false 
+  }
+  console.log(grid)
+  console.log(solution)
+  console.log(JSON.stringify(grid)=== JSON.stringify(solution))
+  return true
+}
+
+  hIsValid(row, col, grid, list, mainList){
+    for (let i = 0; i < 9; i++) {
+      this.removeItem(list, grid[i][col])
+    }
+    for (let i = 0; i < 9; i++) {
+      this.removeItem(list, grid[row][i])
+    }
+    let boxRow = row - (row % 3);
+    let boxCol = col - (col % 3);
+    for (let i = boxRow; i < boxRow + 3; i++) {
+      for (let j = boxCol; j < boxCol + 3; j++) {
+        this.removeItem(list, grid[i][j])
+      }
+    }
+    mainList.push({row:row, col:col, list:list})
+  }
+  removeItem(list, item){
+    const index = list.indexOf(item);
+    if (index !== -1) {
+      list.splice(index, 1);
+    }
+  }
   isValid(guess, row, col, grid) {
     for (let i = 0; i < 9; i++) {
       if (grid[i][col] === guess) {
@@ -296,6 +380,8 @@ class Board extends Component {
               </div>
             ))}
         </div>
+        <button onClick={()=>{this.solveByHeuristic(this.state.puzzle)}}>Hsolve</button>
+        <button onClick={()=>{this.solve(this.state.puzzle)}}>Bsolve</button>
       </div>
     );
   }
