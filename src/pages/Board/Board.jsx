@@ -29,6 +29,8 @@ class Board extends Component {
     level: "easy",
     runningTimer: false,
     lastField: 0,
+    checkComplete: false,
+    time: "",
   };
   /* ---------------------------PLAYER-FUNCTIONS----------*/
   setLevel = (level) => {
@@ -84,19 +86,19 @@ class Board extends Component {
   }
 
   checkInput = (event) => {
+    this.checkComplete(this.state.puzzle)
     const field = event.target.value;
     const re = /[1-9]/;
     if (!re.test(field) || field.length >= 2) {
       event.target.value = "";
-      console.log(player);
+      this.checkComplete(this.state.puzzle) 
     } else {
+      this.checkComplete(this.state.puzzle)
       const index = event.target.dataset.id;
       const col = index % 9;
       const row = (index - col) / 9;
-
       const number = parseInt(event.target.value);
       player[row][col] = number;
-      console.log(this.state.puzzle);
       this.fillCell(row, col, number);
       this.showRepeat(number, row, col, this.state.puzzle);
     }
@@ -173,7 +175,20 @@ class Board extends Component {
     }
     return puzzle;
   }
-
+  checkComplete (grid) {
+    if (JSON.stringify(solution) === JSON.stringify(grid)){
+      this.setState({
+        checkComplete: true,
+        runningTimer:false
+      })
+      console.log("complete sudoku")
+    }
+  }
+  setTime(time){
+    this.setState({
+      time: time
+    })
+  }
   /* ---------------------------DEV-FUNCTIONS----------*/
   solve(grid) {
     for (let row = 0; row < grid.length; row++) {
@@ -263,6 +278,7 @@ class Board extends Component {
           clear={this.handleClear}
           check={this.checkSol}
           timer={this.state.runningTimer}
+          timeFunction={this.setTime}
         />
         <div className="board">
           {this.state.puzzle &&

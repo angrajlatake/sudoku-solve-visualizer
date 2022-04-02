@@ -1,7 +1,7 @@
 import React from "react";
 import { useStopwatch } from "react-timer-hook";
 
-function MyStopwatch({ startTimer }) {
+function MyStopwatch({ timeFunction }) {
   const { seconds, minutes, hours, isRunning, start, pause, reset } =
     useStopwatch({ autoStart: true });
 
@@ -14,10 +14,10 @@ function MyStopwatch({ startTimer }) {
   );
 }
 
-export default function Timer() {
+export default function Timer({timeFunction}) {
   return (
     <div>
-      <MyStopwatch />
+      <MyStopwatch timeFunction ={timeFunction} />
     </div>
   );
 }
