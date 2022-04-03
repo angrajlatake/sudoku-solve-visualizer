@@ -30,7 +30,7 @@ class Board extends Component {
     runningTimer: false,
     lastField: 0,
     checkComplete: false,
-    time: "",
+    time: 100,
   };
   /* ---------------------------PLAYER-FUNCTIONS----------*/
   setLevel = (level) => {
@@ -191,13 +191,14 @@ class Board extends Component {
   }
   /* ---------------------------DEV-FUNCTIONS----------*/
   solve(grid) {
+    const start = Date.now();
     for (let row = 0; row < grid.length; row++) {
       for (let col = 0; col < grid.length; col++) {
         if (grid[row][col] === 0) {
           for (let guess = 1; guess < 10; guess++) {
             timeout = setTimeout(() => {
               this.fillCell(row, col, guess);
-            }, (TIME += 50));
+            }, (TIME += this.state.time));
             if (this.isValid(guess, row, col, grid)) {
               // await this.delay(1000)
               grid[row][col] = guess;
@@ -207,16 +208,17 @@ class Board extends Component {
               grid[row][col] = 0;
               timeout = setTimeout(() => {
                 this.emptyCell(row, col);
-              }, (TIME += 50));
+              }, (TIME += this.state.time));
             }
           }
           timeout = setTimeout(() => {
             this.emptyCell(row, col);
-          }, (TIME += 50));
+          }, (TIME += this.state.time));
           return false;
         }
       }
     }
+    console.log(Date.now() - start);
     return true;
   }
   solveByHeuristic(grid){
@@ -240,45 +242,45 @@ class Board extends Component {
     }
   }
   heuristicHelper(mainList, grid){
-    console.log(mainList)
-    mainList.sort((a,b) =>{
-      return a.list.length - b.list.length
-    })
+    const start = Date.now()
     for (let i = 0; i < mainList.length; i++){
 
       const item = mainList[i]
       const row = item.row;
       const col = item.col;
       const list = item.list
-      console.log(item, i)
-      for (let j = 0; j < list.length; j++){
-        const guess = list[j];
-        console.log(guess)
-        timeout = setTimeout(() => {
-          this.fillCell(row, col, guess);
-        }, (TIME += 50));
-        if (this.isValid(guess, row, col, grid)){
-          grid[row][col] = guess;
-          this.removeItem(mainList, item)
-
-          if (this.heuristicHelper(mainList,grid)){
-            return true
-          }
-          mainList.unshift(item)
-          grid[row][col] = 0; 
+      if (grid[row][col]===0){
+        for (let j = 0; j < list.length; j++){
+          const guess = list[j];
+          console.log(guess)
           timeout = setTimeout(() => {
-            this.emptyCell(row, col);
-          }, (TIME += 50));
-        }
+            this.fillCell(row, col, guess);
+          }, (TIME += this.state.time));
+          if (this.isValid(guess, row, col, grid)){
+            grid[row][col] = guess;
+            this.removeItem(mainList, item)
+  
+            if (this.heuristicHelper(mainList,grid)){
+              return true
+            }
+            mainList.unshift(item)
+            grid[row][col] = 0; 
+            timeout = setTimeout(() => {
+              this.emptyCell(row, col);
+            }, (TIME += this.state.time));
+          }
+        } 
       }
+
       timeout = setTimeout(() => {
         this.emptyCell(row, col);
-      }, (TIME += 50));
+      }, (TIME += this.state.time));
       return false 
   }
   console.log(grid)
   console.log(solution)
   console.log(JSON.stringify(grid)=== JSON.stringify(solution))
+  console.log(Date.now() - start)
   return true
 }
 
@@ -297,6 +299,7 @@ class Board extends Component {
       }
     }
     mainList.push({row:row, col:col, list:list})
+    console.log(mainList)
   }
   removeItem(list, item){
     const index = list.indexOf(item);
