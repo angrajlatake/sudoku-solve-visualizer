@@ -1,9 +1,9 @@
 import "./Navbar.scss";
 import Timer from "../Timer/Timer";
-function Navbar({ dev, level, start, clear, check, timer, timeFunction }) {
+function Navbar(props) {
   return (
     <>
-      {dev ? (
+      {props.dev ? (
         <div className="nav">
           <ul className="list">
             <li className="list__item">
@@ -13,7 +13,7 @@ function Navbar({ dev, level, start, clear, check, timer, timeFunction }) {
                   name="level"
                   id="level"
                   onChange={(event) => {
-                    level(event.target.value);
+                    props.algo(event.target.value);
                   }}
                 >
                   <option className="option" >
@@ -34,8 +34,7 @@ function Navbar({ dev, level, start, clear, check, timer, timeFunction }) {
                   name="speed"
                   id="speed"
                   onChange={(event) => {
-                    timer(event.target.value);
-                    console.log(event.target.value)
+                    props.setTime(event.target.value);
                   }}
                 >
                   <option className="option" >
@@ -53,16 +52,19 @@ function Navbar({ dev, level, start, clear, check, timer, timeFunction }) {
                 </select>
             </li>
 
-            <li className="list__item" onClick={check}>
+            <li className="list__item" onClick={props.solve}>
               Visualize
             </li>
 
-            <li className="list__item" onClick={start}>
+            <li className="list__item" onClick={props.start}>
               New
             </li>
-            <li className="list__item" onClick={clear}>
+            {!props.complete ? <li className="list__item" onClick={props.clear}>
               Stop
-            </li>
+            </li> : <li className="list__item" onClick={props.reset}>
+              Reset
+            </li>}
+            
           </ul>
         </div>
       ) : (
@@ -75,7 +77,7 @@ function Navbar({ dev, level, start, clear, check, timer, timeFunction }) {
                   name="level"
                   id="level"
                   onChange={(event) => {
-                    level(event.target.value);
+                    props.level(event.target.value);
                   }}
                 >
                   <option className="option" value="easy">
@@ -90,20 +92,20 @@ function Navbar({ dev, level, start, clear, check, timer, timeFunction }) {
                 </select>
               </div>
             </li>
-            <li className="list__item" onClick={clear}>
+            <li className="list__item" onClick={props.clear}>
               Clear
             </li>
 
-            {timer ? (
+            {props.timer ? (
               <li className="list__item">
-                <Timer timeFunction={timeFunction} />
+                <Timer timeFunction={props.timeFunction} />
               </li>
             ) : (
-              <li className="list__item" onClick={start}>
+              <li className="list__item" onClick={props.start}>
                 Start
               </li>
             )}
-            <li className="list__item" onClick={check}>
+            <li className="list__item" onClick={props.check}>
               Check
             </li>
             <li className="list__item">Submit</li>

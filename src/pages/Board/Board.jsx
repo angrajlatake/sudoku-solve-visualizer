@@ -7,9 +7,10 @@ import Navbar from "../../components/Navbar/Navbar";
 import Field from "../../components/Field/Field";
 var solution = [];
 var player = [];
-let TIME = 1000;
+let TIME = 0;
 var timeout = 0;
 var id = 0;
+var puzzleCopy =[]
 const emptyGame = [
   [0, 0, 0, 0, 0, 0, 0, 0, 0],
   [0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -25,12 +26,13 @@ const emptyGame = [
 class Board extends Component {
   state = {
     puzzle: emptyGame,
+    puzzleCopy: null,
     devMode: false,
     level: "easy",
     runningTimer: false,
     lastField: 0,
     checkComplete: false,
-    time: 100,
+    time: 50,
   };
   /* ---------------------------PLAYER-FUNCTIONS----------*/
   setLevel = (level) => {
@@ -41,6 +43,7 @@ class Board extends Component {
   };
   checkSol = (event) => {
     this.checkFields(this.state.puzzle);
+    this.checkComplete()
   };
   checkFields = (grid) => {
     for (let row = 0; row < grid.length; row++) {
@@ -86,19 +89,19 @@ class Board extends Component {
   }
 
   checkInput = (event) => {
-    this.checkComplete(this.state.puzzle)
+    this.checkComplete()
     const field = event.target.value;
     const re = /[1-9]/;
     if (!re.test(field) || field.length >= 2) {
       event.target.value = "";
-      this.checkComplete(this.state.puzzle) 
+      this.checkComplete() 
     } else {
-      this.checkComplete(this.state.puzzle)
+      console.log('checking complete')
+      this.checkComplete()
       const index = event.target.dataset.id;
       const col = index % 9;
       const row = (index - col) / 9;
       const number = parseInt(event.target.value);
-      player[row][col] = number;
       this.fillCell(row, col, number);
       this.showRepeat(number, row, col, this.state.puzzle);
     }
@@ -146,6 +149,7 @@ class Board extends Component {
     });
     console.log(solution);
   };
+
   createSudoku() {
     const puzzle = [];
     solution = [];
@@ -153,7 +157,7 @@ class Board extends Component {
 
     const raw = data.puzzle;
     const sol = data.solution;
-
+    puzzleCopy = raw;
     for (let i = 0; i < 9; i++) {
       const list = [];
       for (let j = 0; j < 9; j++) {
@@ -175,13 +179,16 @@ class Board extends Component {
     }
     return puzzle;
   }
-  checkComplete (grid) {
-    if (JSON.stringify(solution) === JSON.stringify(grid)){
+  checkComplete () {
+    if (JSON.stringify(solution) === JSON.stringify(this.state.puzzle)){
       this.setState({
-        checkComplete: true,
-        runningTimer:false
+        checkComplete: !this.state.checkComplete,
+        runningTimer:false,
+        puzzle: this.state.puzzle
       })
       console.log("complete sudoku")
+    } else{
+      console.log('false')
     }
   }
   setTime(time){
@@ -190,8 +197,23 @@ class Board extends Component {
     })
   }
   /* ---------------------------DEV-FUNCTIONS----------*/
+  changeDevMode = (event) => {
+    this.setState({
+      devMode: !this.state.devMode,
+    });
+  }
+  setAlgo = (algo) => {
+    this.setState({
+      Algorithm: algo,
+    });
+    console.log(this.state.Algorithm)
+  };
+  setSpeed = (speed) => {
+      this.setState ({
+        time: speed
+      })
+  }
   solve(grid) {
-    const start = Date.now();
     for (let row = 0; row < grid.length; row++) {
       for (let col = 0; col < grid.length; col++) {
         if (grid[row][col] === 0) {
@@ -218,10 +240,13 @@ class Board extends Component {
         }
       }
     }
-    console.log(Date.now() - start);
+    timeout = setTimeout(() => {
+      this.checkComplete();
+    }, (TIME += this.state.time));
     return true;
   }
   solveByHeuristic(grid){
+    const t = performance.now();
     const mainList = [];
     for (let row = 0; row < grid.length; row++){
       for (let col = 0; col < grid.length; col++) {
@@ -235,16 +260,15 @@ class Board extends Component {
     mainList.sort((a,b) =>{
       return a.list.length - b.list.length
     })
-    console.log(mainList)
 
     if (this.heuristicHelper(mainList, grid)){
       return true
     }
+    console.log(performance.now() - t);
   }
   heuristicHelper(mainList, grid){
-    const start = Date.now()
-    for (let i = 0; i < mainList.length; i++){
 
+    for (let i = 0; i < mainList.length; i++){
       const item = mainList[i]
       const row = item.row;
       const col = item.col;
@@ -252,7 +276,6 @@ class Board extends Component {
       if (grid[row][col]===0){
         for (let j = 0; j < list.length; j++){
           const guess = list[j];
-          console.log(guess)
           timeout = setTimeout(() => {
             this.fillCell(row, col, guess);
           }, (TIME += this.state.time));
@@ -277,10 +300,7 @@ class Board extends Component {
       }, (TIME += this.state.time));
       return false 
   }
-  console.log(grid)
-  console.log(solution)
-  console.log(JSON.stringify(grid)=== JSON.stringify(solution))
-  console.log(Date.now() - start)
+
   return true
 }
 
@@ -299,7 +319,6 @@ class Board extends Component {
       }
     }
     mainList.push({row:row, col:col, list:list})
-    console.log(mainList)
   }
   removeItem(list, item){
     const index = list.indexOf(item);
@@ -350,23 +369,112 @@ class Board extends Component {
       clearTimeout(timeout);
       timeout--;
     }
+    this.handleReset()
   };
   handleSolve = (event) => {
-    this.solve(this.state.puzzle);
+    if (this.state.Algorithm === 'DFS'){
+      this.solve(this.state.puzzle)
+    }else if(this.state.Algorithm === 'BFS'){
+      this.heuristicSolver(this.state.puzzle)
+    }
   };
+
+  heuristicBuilder(grid){
+    const mainList = [];
+    for (let row = 0; row < grid.length; row++){
+      for (let col = 0; col < grid.length; col++) {
+        const list = [1,2,3,4,5,6,7,8,9]
+        if (grid[row][col] === 0) {
+          this.hIsValid(row, col, grid, list, mainList)
+        }
+      }
+    }
+    mainList.sort((a,b) =>{
+      return a.list.length - b.list.length
+    })
+    return mainList
+  }
+  heuristicSolver(grid){
+    console.log('starting heuristic solver')
+    const mainList = this.heuristicBuilder(grid)
+    for (let i = 0; i < mainList.length; i++){
+      const item = mainList[i]
+      const row = item.row;
+      const col = item.col;
+      const list = item.list
+      if (grid[row][col]===0){
+        for (let j = 0; j < list.length; j++){
+          const guess = list[j];
+          timeout = setTimeout(() => {
+            this.fillCell(row, col, guess);
+          }, (TIME += this.state.time));
+          if (this.isValid(guess, row, col, grid)){
+            grid[row][col] = guess;
+            this.removeItem(mainList, item)
+  
+            if (this.heuristicSolver(grid)){
+              return true
+            }
+            mainList.unshift(item)
+            grid[row][col] = 0; 
+            timeout = setTimeout(() => {
+              this.emptyCell(row, col);
+            }, (TIME += this.state.time));
+          }
+        } 
+      }
+
+      timeout = setTimeout(() => {
+        this.emptyCell(row, col);
+      }, (TIME += this.state.time));
+      return false 
+  }
+  timeout = setTimeout(() => {
+    this.checkComplete();
+  }, (TIME += this.state.time));
+  return true
+}
+handleReset(event) {
+  const resetBoard =[]
+  for (let i = 0; i < 9; i++) {
+    const list = [];
+    for (let j = 0; j < 9; j++) {
+      if (puzzleCopy[i * 9 + j] === "-") {
+        list.push(0);
+      } else {
+        list.push(parseInt(puzzleCopy[i * 9 + j]));
+      }
+    }
+    resetBoard.push(list);
+
+  }
+  console.log(puzzleCopy)
+}
+  
   render() {
     return (
-      <div>
-        <Header />
-        <Navbar
+      <div className={this.state.devMode ? "game-dev" : "game"}>
+        <Header className ={this.state.devMode ? "game-dev" : "game"}/>
+        {this.state.devMode ? <Navbar
           dev={this.state.devMode}
-          level={this.setLevel}
+          algo={this.setAlgo}
           start={this.handleNew}
-          clear={this.handleClear}
-          check={this.checkSol}
-          timer={this.state.runningTimer}
+          clear={this.handleStop}
+          solve={this.handleSolve}
+          setTime={this.setSpeed}
           timeFunction={this.setTime}
-        />
+          complete ={this.state.checkComplete}
+          reset ={this.handleReset}
+          speed ={timeout}
+        /> : <Navbar
+        dev={this.state.devMode}
+        level={this.setLevel}
+        start={this.handleNew}
+        clear={this.handleClear}
+        check={this.checkSol}
+        timer={this.state.runningTimer}
+        timeFunction={this.setTime}
+      />}
         <div className="board">
           {this.state.puzzle &&
             this.state.puzzle.map((row, index) => (
@@ -383,8 +491,6 @@ class Board extends Component {
               </div>
             ))}
         </div>
-        <button onClick={()=>{this.solveByHeuristic(this.state.puzzle)}}>Hsolve</button>
-        <button onClick={()=>{this.solve(this.state.puzzle)}}>Bsolve</button>
       </div>
     );
   }
