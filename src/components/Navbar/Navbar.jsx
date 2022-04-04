@@ -108,7 +108,7 @@ function Navbar(props) {
             <li className="list__item" onClick={props.check}>
               Check
             </li>
-            <li className="list__item">Submit</li>
+            <li className="list__item" onClick={props.devMode}>DEV</li>
           </ul>
         </div>
       )}

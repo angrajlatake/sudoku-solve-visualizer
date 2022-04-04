@@ -21,9 +21,12 @@
             color: black;
             width: 100px;
             height: 40px;
+            text-shadow: 2px 8px 6px rgba(0,0,0,0.3),
+            0px -5px 16px rgba(255,255,255,0.3);
             transition: all 0.3s ease-in-out;
             &:hover {
-                font-weight: bold;
+                text-shadow: none;
+
             }
         }
     }

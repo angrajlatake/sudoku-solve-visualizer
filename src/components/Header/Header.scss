@@ -7,3 +7,24 @@
     justify-content: center;
     align-items: center;
 }
+.dev-btn {
+    display: flex;
+    position: absolute;
+    right: 30px;
+    height: 40px;
+    width: 40px;
+    top: 10px;
+
+}
+
+.dev-img{
+    color: black;
+    height: 50px;
+    width: 50px;
+    filter: drop-shadow(-5px 5px 5px rgba(0, 0, 0, 0.443));
+    transition: all 0.3s ease-in-out;
+    &:hover{
+        cursor: pointer;
+        filter: none;
+    }
+}

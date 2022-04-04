@@ -32,7 +32,7 @@ class Board extends Component {
     runningTimer: false,
     lastField: 0,
     checkComplete: false,
-    time: 50,
+    time: 100,
   };
   /* ---------------------------PLAYER-FUNCTIONS----------*/
   setLevel = (level) => {
@@ -454,7 +454,7 @@ handleReset(event) {
   render() {
     return (
       <div className={this.state.devMode ? "game-dev" : "game"}>
-        <Header className ={this.state.devMode ? "game-dev" : "game"}/>
+        <Header devMode ={this.changeDevMode}/>
         {this.state.devMode ? <Navbar
           dev={this.state.devMode}
           algo={this.setAlgo}

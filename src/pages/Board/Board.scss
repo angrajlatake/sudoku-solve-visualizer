@@ -10,6 +10,7 @@
 }
 .row:nth-child(9)  > input{
     border-bottom: 5px solid black;
+
 }
 .row:nth-child(4)  > input{
     border-top: 6px solid darkgray;
@@ -51,6 +52,7 @@
     // gap: 1rem;
     border-radius: 10px;
     padding: 1rem;
+
 }
 .input {
     height: 50px;
@@ -60,7 +62,9 @@
     justify-content: center;
     align-items: center;
     text-align: center;
-    font-size: 2rem;
+    font-size: 2.5rem;
+    text-shadow: 2px 8px 6px rgba(0,0,0,0.2),
+               0px -5px 16px rgba(255,255,255,0.3);
     font-weight: lighter;
     &:focus {
         outline: none;
@@ -91,4 +95,16 @@
 }
 .incorrectField {
     background-color: rgba(230, 75, 36, 0.575);
+}
+
+.game-dev{
+    transition: all 0.5s ease-in-out;
+    background-color: white;
+    font-family: 'Source Code Pro', monospace;
+
+}
+.game{
+    background-color: white;
+    transition: all 0.5s ease-in-out;
+    font-family: 'Poppins', sans-serif;
 }
