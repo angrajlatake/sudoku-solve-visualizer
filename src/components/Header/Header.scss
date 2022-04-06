@@ -1,8 +1,9 @@
 @use '../../styles/partials/colors' as *;
 
 .header{
-    color: black;
-    height: 70px;
+    background-color: black;
+    color: white;
+    height: 50px;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -14,17 +15,16 @@
     height: 40px;
     width: 40px;
     top: 10px;
-
 }
 
 .dev-img{
-    color: black;
-    height: 50px;
+    height: 30px;
     width: 50px;
-    filter: drop-shadow(-5px 5px 5px rgba(0, 0, 0, 0.443));
+    fill: white;
+    filter: invert(100%) sepia(100%) saturate(0%) hue-rotate(288deg) brightness(102%) contrast(102%);
     transition: all 0.3s ease-in-out;
     &:hover{
         cursor: pointer;
-        filter: none;
+        height: 35px;
     }
 }

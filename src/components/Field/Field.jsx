@@ -7,6 +7,7 @@ function Field({col, checkInput, id, checkSol}) {
     defaultValue={col === 0 ? null : col}
     onChange={checkInput}
     data-id = {id}
+    disabled ={col !== 0 ? true : false}
   />
   );
 }

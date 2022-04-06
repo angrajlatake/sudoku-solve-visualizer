@@ -26,20 +26,32 @@
             transition: all 0.3s ease-in-out;
             &:hover {
                 text-shadow: none;
+                cursor: pointer;
 
             }
         }
     }
 }
 .select {
+    font-family: inherit;
     height: 40px;
     width: 100px;
     font-size: 1.5rem;
+    background-color: rgba(0, 0, 0, 0);
+    border: none;
+    overflow: hidden;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    background: url('../../assets/images/arrow.svg') 96% / 15% no-repeat rgba(238, 238, 238, 0);
+    &:focus{
+        outline: none;
+    }
+    &:hover{
+        cursor: pointer;
+    }
 }
 
-// .select select {
-//     display: none;
-// }
 .option {
     height: 40px;
     width: 100px;

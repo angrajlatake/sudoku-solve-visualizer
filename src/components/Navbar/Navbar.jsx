@@ -34,7 +34,7 @@ function Navbar(props) {
                   name="speed"
                   id="speed"
                   onChange={(event) => {
-                    props.setTime(event.target.value);
+                    props.setSpeed(event.target.value);
                   }}
                 >
                   <option className="option" >
@@ -46,7 +46,7 @@ function Navbar(props) {
                   <option className="option" value="50">
                     Slow
                   </option>
-                  <option className="option" value="100">
+                  <option className="option" value="1000">
                     Extra Slow
                   </option>
                 </select>
@@ -97,7 +97,7 @@ function Navbar(props) {
             </li>
 
             {props.timer ? (
-              <li className="list__item">
+              <li className="list__item time">
                 <Timer timeFunction={props.timeFunction} />
               </li>
             ) : (
@@ -108,7 +108,7 @@ function Navbar(props) {
             <li className="list__item" onClick={props.check}>
               Check
             </li>
-            <li className="list__item" onClick={props.devMode}>DEV</li>
+            <li className="list__item" onClick={props.submit}>Submit</li>
           </ul>
         </div>
       )}

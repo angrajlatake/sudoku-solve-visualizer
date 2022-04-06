@@ -8,7 +8,7 @@ function MyStopwatch({ timeFunction }) {
   return (
     <div style={{ textAlign: "center" }}>
       <div style={isRunning ?{ fontSize: "2rem" }:{fontWeight: "lighter"}} onClick={isRunning ? pause : start}>
-        <span>{hours}</span>:<span>{minutes}</span>:<span>{seconds}</span>
+        <span className="hours">{hours}</span>:<span className="minutes">{minutes}</span>:<span className="seconds">{seconds}</span>
       </div>
     </div>
   );
