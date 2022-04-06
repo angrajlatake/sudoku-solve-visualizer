@@ -35,6 +35,7 @@ class Board extends Component {
     runningTimer: false,
     checkComplete: false,
     speed: 100,
+    BSpeed: 200,
     topPlayers: [],
     showModal: false,
     time:"",
@@ -233,6 +234,8 @@ class Board extends Component {
         this.setState({
           showModal: false,
           topPlayers: res.data,
+          puzzle: emptyGame,
+          runningTimer: false,
         });
       })
       .catch((err) => {
@@ -482,7 +485,7 @@ class Board extends Component {
           const guess = list[j];
           timeout = setTimeout(() => {
             this.fillCell(row, col, guess);
-          }, (TIME += this.state.speed));
+          }, (TIME += this.state.BSpeed));
           timeOutArr.push(timeout);
           if (this.isValid(guess, row, col, grid)) {
             grid[row][col] = guess;
@@ -495,7 +498,7 @@ class Board extends Component {
             grid[row][col] = 0;
             timeout = setTimeout(() => {
               this.emptyCell(row, col);
-            }, (TIME += this.state.speed));
+            }, (TIME += this.state.BSpeed));
             timeOutArr.push(timeout);
           }
         }
@@ -503,13 +506,13 @@ class Board extends Component {
 
       timeout = setTimeout(() => {
         this.emptyCell(row, col);
-      }, (TIME += this.state.speed));
+      }, (TIME += this.state.BSpeed));
       timeOutArr.push(timeout);
       return false;
     }
     timeout = setTimeout(() => {
       this.checkComplete();
-    }, (TIME += this.state.speed));
+    }, (TIME += this.state.BSpeed));
     timeOutArr.push(timeout);
     return true;
   }

@@ -73,6 +73,7 @@ body * {
         outline: none;
         transform: scale(1.5);
         background-color: rgba(255, 255, 255, 0.753);
+        border: 2px solid rgb(37, 37, 37);
     }
     &:disabled{
         color: black;
