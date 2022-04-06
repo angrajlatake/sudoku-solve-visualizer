@@ -9,7 +9,7 @@ function Navbar(props) {
             <li className="list__item">
               <div className="select">
                 <select
-                  className="select"
+                  className="select algo"
                   name="level"
                   id="level"
                   onChange={(event) => {
@@ -20,17 +20,17 @@ function Navbar(props) {
                     Algorithm
                   </option>
                   <option className="option" value="DFS">
-                    Depth first Search
+                    DFS
                   </option>
                   <option className="option" value="BFS">
-                    Best First Search
+                    BFS
                   </option>
                 </select>
               </div>
             </li>
             <li className="list__item">
             <select
-                  className="select"
+                  className="select speed"
                   name="speed"
                   id="speed"
                   onChange={(event) => {
@@ -44,10 +44,10 @@ function Navbar(props) {
                     Fast
                   </option>
                   <option className="option" value="50">
-                    Slow
+                    Medium
                   </option>
                   <option className="option" value="1000">
-                    Extra Slow
+                    Slow
                   </option>
                 </select>
             </li>
@@ -73,7 +73,7 @@ function Navbar(props) {
             <li className="list__item">
               <div className="select">
                 <select
-                  className="select"
+                  className="select level"
                   name="level"
                   id="level"
                   onChange={(event) => {

@@ -37,7 +37,8 @@ class Board extends Component {
     speed: 100,
     topPlayers: [],
     showModal: false,
-    time:""
+    time:"",
+    speedLimit: null
   };
   /* ---------------------------PLAYER-FUNCTIONS----------*/
   setLevel = (level) => {
@@ -272,7 +273,7 @@ class Board extends Component {
   };
   setSpeed = (speed) => {
     this.setState({
-      speed: speed,
+      speedLimit: speed,
     });
   };
   solve(grid) {
@@ -527,6 +528,7 @@ class Board extends Component {
     }
     this.setState({
       puzzle: resetBoard,
+      checkComplete: false,
     });
   }
   refresh =() =>{
@@ -536,7 +538,7 @@ class Board extends Component {
     return (
       <>
         <div className={this.state.devMode ? "game-dev" : "game"}>
-          <Header devMode={this.changeDevMode} />
+          <Header devMode={this.changeDevMode} dev = {this.state.devMode}/>
           {this.state.devMode ? (
             <Navbar
               dev={this.state.devMode}
@@ -593,7 +595,6 @@ class Board extends Component {
             </div>
           ) : null}
           {this.state.showModal ? <Modal time ={this.state.time} onSubmit ={this.onModalSubmit} close={this.showModal}/>:null}
-          <button onClick={this.refresh}>refresh</button>
         </div>
       </>
     );

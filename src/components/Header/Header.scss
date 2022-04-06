@@ -7,6 +7,13 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    &__title {
+
+        font-size:1.5rem;
+        text-shadow: 0 0 20px #fff, 0 0 30px #fff, 0 0 40px #228DFF, 0 0 70px #228DFF ;
+        animation: neon1 alternate infinite 5s;
+        will-change: opacity;
+    }
 }
 .dev-btn {
     display: flex;
@@ -26,5 +33,15 @@
     &:hover{
         cursor: pointer;
         height: 35px;
+    }
+}
+
+
+@keyframes neon1 {
+    20% {
+        opacity: 1;
+    }
+    80% {
+        opacity: 0.6;
     }
 }

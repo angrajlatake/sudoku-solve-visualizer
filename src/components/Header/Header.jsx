@@ -3,7 +3,7 @@ import code from '../../assets/images/code.svg';
 function Header(props) {
   return (
     <div className="header">
-      <div className="header__title">
+      <div className={props.dev ?"header__title": null}>
         <h1>Sudoku</h1>
       </div>
       <div className="dev-btn" onClick={props.devMode}>
