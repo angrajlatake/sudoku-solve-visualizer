@@ -1,0 +1,14 @@
+.form {
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    &__name {
+        height: 40px;
+        width: 300px;
+        text-align: center;
+        font-size: 1.5rem;
+    }
+}

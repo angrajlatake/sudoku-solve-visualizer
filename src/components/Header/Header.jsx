@@ -1,10 +1,16 @@
-import './Header.scss'
-function Header() {
-    return ( 
-        <div className="header">
-            <h1>Sudoku</h1>
-        </div>
-     );
+import "./Header.scss";
+import code from '../../assets/images/code.svg';
+function Header(props) {
+  return (
+    <div className="header">
+      <div className={props.dev ?"header__title": null}>
+        <h1>Sudoku</h1>
+      </div>
+      <div className="dev-btn" onClick={props.devMode}>
+        <img className="dev-img" src={code} alt="" />
+      </div>
+    </div>
+  );
 }
 
 export default Header;
