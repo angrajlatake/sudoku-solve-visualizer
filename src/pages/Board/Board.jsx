@@ -39,7 +39,8 @@ class Board extends Component {
     topPlayers: [],
     showModal: false,
     time:"",
-    speedLimit: null
+    speedLimit: null,
+    Alogrithm: "",
   };
   /* ---------------------------PLAYER-FUNCTIONS----------*/
 
@@ -257,7 +258,7 @@ class Board extends Component {
 
 
   /* ---------------------------DEV-FUNCTIONS----------*/
-  
+//check if the solver has found a solution
   checkComplete() {
     console.log(this.state.puzzle);
     if (JSON.stringify(solution) === JSON.stringify(this.state.puzzle)) {
@@ -273,22 +274,26 @@ class Board extends Component {
       timeout--;
     }
   }
+  //change state to get algorithm options
   changeDevMode = (event) => {
     this.setState({
       devMode: !this.state.devMode,
     });
   };
+  //change state to selected algorithm
   setAlgo = (algo) => {
     this.setState({
       Algorithm: algo,
     });
     console.log(this.state.Algorithm);
   };
+  //change speed of the algorithm
   setSpeed = (speed) => {
     this.setState({
       speed: speed,
     });
   };
+  //solve sudoku with Depth-First Search
   solve(grid) {
     for (let row = 0; row < grid.length; row++) {
       for (let col = 0; col < grid.length; col++) {
@@ -326,8 +331,7 @@ class Board extends Component {
     console.log(timeout)
     return true;
   }
-
-
+  //check if the number is valid that has been entered into the field by Depth-First Search algorithm
   isValid(guess, row, col, grid) {
     for (let i = 0; i < 9; i++) {
       if (grid[i][col] === guess) {
@@ -351,6 +355,7 @@ class Board extends Component {
     // this.correctCell(row, col)
     return true;
   }
+  //fill the cell with the number that has been selected by Depth-First Search algorithm
   fillCell(row, col, guess) {
     const selected =
       document.querySelector(".board").childNodes[row].childNodes[col];
@@ -358,7 +363,7 @@ class Board extends Component {
 
     selected.value = guess;
   }
-
+  //empty the cell that has been selected by Depth-First Search algorithm
   emptyCell(row, col) {
     const selected =
       document.querySelector(".board").childNodes[row].childNodes[col];
@@ -366,6 +371,7 @@ class Board extends Component {
 
     selected.value = "";
   }
+  //stop the algorithm solving the sudoku
   handleStop = (event) => {
     console.log(timeOutArr)
     // while (timeout >= 0) {
@@ -380,8 +386,8 @@ class Board extends Component {
     timeout = 0;
     this.handleReset();
   };
+  //solve the sudoku with selected algorithm
   handleSolve = (event) => {
-    console.log(this.state.speed)
     TIME = 0
     if (this.state.Algorithm === "DFS") {
       this.solve(this.state.puzzle);
@@ -389,7 +395,7 @@ class Board extends Component {
       this.heuristicSolver(this.state.puzzle);
     }
   };
-
+  // function that give the heuristic value to empty field
   heuristicBuilder= (grid) => {
     const mainList = [];
     for (let row = 0; row < grid.length; row++) {
@@ -405,6 +411,7 @@ class Board extends Component {
     });
     return mainList;
   }
+  //Best first search algorithm
   heuristicSolver =(grid) => {
     const mainList = this.heuristicBuilder(grid);
     for (let i = 0; i < mainList.length; i++) {
@@ -417,7 +424,7 @@ class Board extends Component {
           const guess = list[j];
           timeout = setTimeout(() => {
             this.fillCell(row, col, guess);
-          }, (TIME += this.state.BSpeed));
+          }, (TIME += this.state.speed));
           timeOutArr.push(timeout);
           if (this.isValid(guess, row, col, grid)) {
             grid[row][col] = guess;
@@ -430,7 +437,7 @@ class Board extends Component {
             grid[row][col] = 0;
             timeout = setTimeout(() => {
               this.emptyCell(row, col);
-            }, (TIME += this.state.BSpeed));
+            }, (TIME += this.state.speed));
             timeOutArr.push(timeout);
           }
         }
@@ -438,16 +445,17 @@ class Board extends Component {
 
       timeout = setTimeout(() => {
         this.emptyCell(row, col);
-      }, (TIME += this.state.BSpeed));
+      }, (TIME += this.state.speed));
       timeOutArr.push(timeout);
       return false;
     }
     timeout = setTimeout(() => {
       this.checkComplete();
-    }, (TIME += this.state.BSpeed));
+    }, (TIME += this.state.speed));
     timeOutArr.push(timeout);
     return true;
   }
+  //checks if the elements is valid in the list of possibilities
   hIsValid(row, col, grid, list, mainList) {
     for (let i = 0; i < 9; i++) {
       this.removeItem(list, grid[i][col]);
@@ -464,12 +472,14 @@ class Board extends Component {
     }
     mainList.push({ row: row, col: col, list: list });
   }
+  //remove the item from the list of possibilities
   removeItem(list, item) {
     const index = list.indexOf(item);
     if (index !== -1) {
       list.splice(index, 1);
     }
   }
+  //reset the sudoku to original state
   handleReset =(event) => {
     const resetBoard = [];
     for (let i = 0; i < 9; i++) {

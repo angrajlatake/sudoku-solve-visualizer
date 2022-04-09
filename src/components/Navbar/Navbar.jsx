@@ -10,13 +10,13 @@ function Navbar(props) {
               <div className="select">
                 <select
                   className="select algo"
-                  name="level"
-                  id="level"
+                  name="algo"
+                  id="algo"
                   onChange={(event) => {
                     props.algo(event.target.value);
                   }}
                 >
-                  <option className="option" >
+                  <option className="option" selected disabled >
                     Algorithm
                   </option>
                   <option className="option" value="DFS">
