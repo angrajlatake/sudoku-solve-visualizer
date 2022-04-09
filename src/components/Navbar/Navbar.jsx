@@ -34,7 +34,7 @@ function Navbar(props) {
                   name="speed"
                   id="speed"
                   onChange={(event) => {
-                    props.setSpeed(event.target.value);
+                    props.setSpeed(parseInt(event.target.value));
                   }}
                 >
                   <option className="option" >
@@ -46,7 +46,7 @@ function Navbar(props) {
                   <option className="option" value="50">
                     Medium
                   </option>
-                  <option className="option" value="1000">
+                  <option className="option" value="100">
                     Slow
                   </option>
                 </select>

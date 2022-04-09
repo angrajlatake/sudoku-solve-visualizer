@@ -257,6 +257,7 @@ class Board extends Component {
 
 
   /* ---------------------------DEV-FUNCTIONS----------*/
+  
   checkComplete() {
     console.log(this.state.puzzle);
     if (JSON.stringify(solution) === JSON.stringify(this.state.puzzle)) {
@@ -285,7 +286,7 @@ class Board extends Component {
   };
   setSpeed = (speed) => {
     this.setState({
-      speedLimit: speed,
+      speed: speed,
     });
   };
   solve(grid) {

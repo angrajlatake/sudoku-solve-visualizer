@@ -1,27 +1,30 @@
 @use '../../styles/partials/colors' as *;
-
+.container {
+    background-color: black;
+}
 .header{
     background-color: black;
     color: white;
     height: 50px;
     display: flex;
-    justify-content: center;
+    justify-content: space-around;
     align-items: center;
+    margin: 0 auto;
     &__title {
 
         font-size:1.5rem;
-        text-shadow: 0 0 20px #fff, 0 0 30px #fff, 0 0 40px #228DFF, 0 0 70px #228DFF ;
+        text-shadow: 0 0 20px #fff, 0 0 30px #fff, 0 0 35px #00FF41, 0 0 45px #008F11 ;
         animation: neon1 alternate infinite 5s;
         will-change: opacity;
     }
 }
 .dev-btn {
     display: flex;
-    position: absolute;
-    right: 30px;
-    height: 40px;
-    width: 40px;
-    top: 10px;
+    // position: absolute;
+    // right: 30px;
+    // height: 40px;
+    // width: 40px;
+    // top: 10px;
 }
 
 .dev-img{
@@ -44,4 +47,62 @@
     80% {
         opacity: 0.6;
     }
+}
+.contact-btn {
+    width: 6.25rem;
+    font-size: 1.5rem;
+    transition: all 0.3s ease-in-out;
+    &:hover{
+        cursor: pointer;
+    }
+}
+.contact-list {
+    width: 6.25rem;
+    display: none;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    height: 50px;
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    gap: 1rem;
+
+    &__item {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        color: black;
+        height: 50px;
+        text-shadow: 2px 8px 6px rgba(0,0,0,0.3),
+        0px -5px 16px rgba(255,255,255,0.3);
+        transition: all .5s ease;
+        &:hover {
+            text-shadow: none;
+            cursor: pointer;
+
+        }
+    }
+}
+.list-img {
+    width: 30px;
+    height: 30px;
+    fill: white;
+    transition: all 0.3s ease-in-out;
+    &:hover{
+        cursor: pointer;
+        transform: scale(1.2);
+    }
+    &-svg{
+        filter: invert(100%) sepia(100%) saturate(0%) hue-rotate(288deg) brightness(102%) contrast(102%);
+    }
+}
+.deactivate {
+    display: none;
+    width: 6.25rem;
+}
+.activate{
+    display: flex;
+    width: 6.25rem;
 }
