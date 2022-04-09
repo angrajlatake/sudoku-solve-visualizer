@@ -13,7 +13,6 @@ function App() {
       <Router>
         <Switch>
           <Route path ='/' exact component={Board}/>
-
         </Switch>
       </Router>
     </div>

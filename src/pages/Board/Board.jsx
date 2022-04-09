@@ -42,102 +42,16 @@ class Board extends Component {
     speedLimit: null
   };
   /* ---------------------------PLAYER-FUNCTIONS----------*/
+
+  // ---------------GAME-FUNCTIONS-----------------
+  //select level of new sudoku game
   setLevel = (level) => {
     this.setState({
       level: level,
     });
     this.handleNew();
   };
-  checkSol = (event) => {
-    this.checkFields(this.state.puzzle);
-  };
-  checkFields = (grid) => {
-    for (let row = 0; row < grid.length; row++) {
-      for (let col = 0; col < grid.length; col++) {
-        if (grid[row][col] === 0) {
-          this.colorEmptyField(row, col);
-        } else if (
-          grid[row][col] !== 0 &&
-          grid[row][col] === solution[row][col]
-        ) {
-          this.colorCorrectField(row, col);
-        } else if (grid[row][col] !== solution[row][col]) {
-          this.colorIncorrectField(row, col);
-        }
-      }
-    }
-  };
-  colorEmptyField(row, col) {
-    const selected =
-      document.querySelector(".board").childNodes[row].childNodes[col];
-    selected.classList.add("showEmptyField");
-    setTimeout(() => {
-      selected.classList.remove("showEmptyField");
-    }, 1000);
-  }
-  colorCorrectField(row, col) {
-    const selected =
-      document.querySelector(".board").childNodes[row].childNodes[col];
-    if (!selected.classList.contains("number")) {
-      selected.classList.add("correctField");
-      setTimeout(() => {
-        selected.classList.remove("correctField");
-      }, 1000);
-    }
-  }
-  colorIncorrectField(row, col) {
-    const selected =
-      document.querySelector(".board").childNodes[row].childNodes[col];
-    selected.classList.add("incorrectField");
-    setTimeout(() => {
-      selected.classList.remove("incorrectField");
-    }, 1000);
-  }
-
-  checkInput = (event) => {
-    const field = event.target.value;
-    const re = /[1-9]/;
-    if (!re.test(field) || field.length >= 2) {
-      event.target.value = "";
-    } else {
-      const index = event.target.dataset.id;
-      const col = index % 9;
-      const row = (index - col) / 9;
-      const number = parseInt(event.target.value);
-      this.fillCell(row, col, number);
-      player[row][col] = number;
-      this.showRepeat(number, row, col, this.state.puzzle);
-    }
-  };
-  showRepeat(number, row, col, grid) {
-    for (let i = 0; i < 9; i++) {
-      if (grid[i][col] === number && i !== row) {
-        this.highlight(i, col);
-      }
-    }
-    for (let i = 0; i < 9; i++) {
-      if (grid[row][i] === number && i !== col) {
-        this.highlight(row, i);
-      }
-    }
-    let boxRow = row - (row % 3);
-    let boxCol = col - (col % 3);
-    for (let i = boxRow; i < boxRow + 3; i++) {
-      for (let j = boxCol; j < boxCol + 3; j++) {
-        if (grid[i][j] === number && i !== row && j !== col) {
-          this.highlight(i, j);
-        }
-      }
-    }
-  }
-  highlight(row, col) {
-    const selected =
-      document.querySelector(".board").childNodes[row].childNodes[col];
-    selected.classList.add("highlight");
-    setTimeout(() => {
-      selected.classList.remove("highlight");
-    }, 1000);
-  }
+  //function that clears all the fields
   handleClear = (event) => {
     this.setState({
       puzzle: emptyGame,
@@ -155,7 +69,7 @@ class Board extends Component {
     console.log(solution);
     console.log(player);
   };
-
+  //function that creates new sudoku and converts it into a 2d array
   createSudoku() {
     const puzzle = [];
     solution = [];
@@ -185,11 +99,12 @@ class Board extends Component {
     }
     return puzzle;
   }
+
   handleSubmit = (event) => {
     console.log("submit clicked");
     console.log(player)
     event.preventDefault();
-    if (JSON.stringify(player) !== JSON.stringify(solution)) {
+    if (JSON.stringify(player) === JSON.stringify(solution)) {
       console.log("complete");
       const hours = document.querySelector(".hours").innerText;
       const minutes = document.querySelector(".minutes").innerText;
@@ -201,13 +116,8 @@ class Board extends Component {
       })
     }
   }
-  setTime(time) {
-    this.setState({
-      time: time,
-    });
-  }
   componentDidMount() {
-    const topFive = axios.get("http://localhost:8080/leaderboard");
+    const topFive = axios.get("https://sudokuscoreapi.herokuapp.com/leaderboard");
     topFive
       .then((res) => {
         this.setState({
@@ -227,7 +137,7 @@ class Board extends Component {
       name: name,
       time: time,
     };
-    const post = axios.post("http://localhost:8080/leaderboard", data);
+    const post = axios.post("https://sudokuscoreapi.herokuapp.com/leaderboard", data);
     post
       .then((res) => {
         console.log(res);
@@ -247,6 +157,105 @@ class Board extends Component {
       showModal: !this.state.showModal,
     })
   }
+  //function for check button
+  checkSol = (event) => {
+    this.checkFields(this.state.puzzle);
+  };
+  //check all the fields and highlight the correct, incorrect and empty fields
+  checkFields = (grid) => {
+    for (let row = 0; row < grid.length; row++) {
+      for (let col = 0; col < grid.length; col++) {
+        if (grid[row][col] === 0) {
+          this.colorEmptyField(row, col);
+        } else if (
+          grid[row][col] !== 0 &&
+          grid[row][col] === solution[row][col]
+        ) {
+          this.colorCorrectField(row, col);
+        } else if (grid[row][col] !== solution[row][col]) {
+          this.colorIncorrectField(row, col);
+        }
+      }
+    }
+  };
+  //highlight the empty fields
+  colorEmptyField(row, col) {
+    const selected =
+      document.querySelector(".board").childNodes[row].childNodes[col];
+    selected.classList.add("showEmptyField");
+    setTimeout(() => {
+      selected.classList.remove("showEmptyField");
+    }, 1000);
+  }
+  //highlight the correct fields
+  colorCorrectField(row, col) {
+    const selected =
+      document.querySelector(".board").childNodes[row].childNodes[col];
+    if (!selected.classList.contains("number")) {
+      selected.classList.add("correctField");
+      setTimeout(() => {
+        selected.classList.remove("correctField");
+      }, 1000);
+    }
+  }
+  //highlight the incorrect fields
+  colorIncorrectField(row, col) {
+    const selected =
+      document.querySelector(".board").childNodes[row].childNodes[col];
+    selected.classList.add("incorrectField");
+    setTimeout(() => {
+      selected.classList.remove("incorrectField");
+    }, 1000);
+  }
+  //checks input for a number and highlights if there are any existing numbers in the same row, column or box
+  checkInput = (event) => {
+    const field = event.target.value;
+    const re = /[1-9]/;
+    if (!re.test(field) || field.length >= 2) {
+      event.target.value = "";
+    } else {
+      const index = event.target.dataset.id;
+      const col = index % 9;
+      const row = (index - col) / 9;
+      const number = parseInt(event.target.value);
+      this.fillCell(row, col, number);
+      player[row][col] = number;
+      this.showRepeat(number, row, col, this.state.puzzle);
+    }
+  };
+  //function to show the repeat numbers in the same row, column or box
+  showRepeat(number, row, col, grid) {
+    for (let i = 0; i < 9; i++) {
+      if (grid[i][col] === number && i !== row) {
+        this.highlight(i, col);
+      }
+    }
+    for (let i = 0; i < 9; i++) {
+      if (grid[row][i] === number && i !== col) {
+        this.highlight(row, i);
+      }
+    }
+    let boxRow = row - (row % 3);
+    let boxCol = col - (col % 3);
+    for (let i = boxRow; i < boxRow + 3; i++) {
+      for (let j = boxCol; j < boxCol + 3; j++) {
+        if (grid[i][j] === number && i !== row && j !== col) {
+          this.highlight(i, j);
+        }
+      }
+    }
+  }
+  //function to highlight repeated numbers
+  highlight(row, col) {
+    const selected =
+      document.querySelector(".board").childNodes[row].childNodes[col];
+    selected.classList.add("highlight");
+    setTimeout(() => {
+      selected.classList.remove("highlight");
+    }, 1000);
+  }
+
+
   /* ---------------------------DEV-FUNCTIONS----------*/
   checkComplete() {
     console.log(this.state.puzzle);
@@ -316,86 +325,8 @@ class Board extends Component {
     console.log(timeout)
     return true;
   }
-  solveByHeuristic(grid) {
-    const t = performance.now();
-    const mainList = [];
-    for (let row = 0; row < grid.length; row++) {
-      for (let col = 0; col < grid.length; col++) {
-        const list = [1, 2, 3, 4, 5, 6, 7, 8, 9];
-        if (grid[row][col] === 0) {
-          this.hIsValid(row, col, grid, list, mainList);
-        }
-      }
-    }
-    console.log("sorting list");
-    mainList.sort((a, b) => {
-      return a.list.length - b.list.length;
-    });
 
-    if (this.heuristicHelper(mainList, grid)) {
-      return true;
-    }
-    console.log(performance.now() - t);
-  }
-  heuristicHelper(mainList, grid) {
-    for (let i = 0; i < mainList.length; i++) {
-      const item = mainList[i];
-      const row = item.row;
-      const col = item.col;
-      const list = item.list;
-      if (grid[row][col] === 0) {
-        for (let j = 0; j < list.length; j++) {
-          const guess = list[j];
-          timeout = setTimeout(() => {
-            this.fillCell(row, col, guess);
-          }, (TIME += this.state.time));
-          if (this.isValid(guess, row, col, grid)) {
-            grid[row][col] = guess;
-            this.removeItem(mainList, item);
 
-            if (this.heuristicHelper(mainList, grid)) {
-              return true;
-            }
-            mainList.unshift(item);
-            grid[row][col] = 0;
-            timeout = setTimeout(() => {
-              this.emptyCell(row, col);
-            }, (TIME += this.state.time));
-          }
-        }
-      }
-
-      timeout = setTimeout(() => {
-        this.emptyCell(row, col);
-      }, (TIME += this.state.time));
-      return false;
-    }
-
-    return true;
-  }
-
-  hIsValid(row, col, grid, list, mainList) {
-    for (let i = 0; i < 9; i++) {
-      this.removeItem(list, grid[i][col]);
-    }
-    for (let i = 0; i < 9; i++) {
-      this.removeItem(list, grid[row][i]);
-    }
-    let boxRow = row - (row % 3);
-    let boxCol = col - (col % 3);
-    for (let i = boxRow; i < boxRow + 3; i++) {
-      for (let j = boxCol; j < boxCol + 3; j++) {
-        this.removeItem(list, grid[i][j]);
-      }
-    }
-    mainList.push({ row: row, col: col, list: list });
-  }
-  removeItem(list, item) {
-    const index = list.indexOf(item);
-    if (index !== -1) {
-      list.splice(index, 1);
-    }
-  }
   isValid(guess, row, col, grid) {
     for (let i = 0; i < 9; i++) {
       if (grid[i][col] === guess) {
@@ -515,6 +446,28 @@ class Board extends Component {
     }, (TIME += this.state.BSpeed));
     timeOutArr.push(timeout);
     return true;
+  }
+  hIsValid(row, col, grid, list, mainList) {
+    for (let i = 0; i < 9; i++) {
+      this.removeItem(list, grid[i][col]);
+    }
+    for (let i = 0; i < 9; i++) {
+      this.removeItem(list, grid[row][i]);
+    }
+    let boxRow = row - (row % 3);
+    let boxCol = col - (col % 3);
+    for (let i = boxRow; i < boxRow + 3; i++) {
+      for (let j = boxCol; j < boxCol + 3; j++) {
+        this.removeItem(list, grid[i][j]);
+      }
+    }
+    mainList.push({ row: row, col: col, list: list });
+  }
+  removeItem(list, item) {
+    const index = list.indexOf(item);
+    if (index !== -1) {
+      list.splice(index, 1);
+    }
   }
   handleReset =(event) => {
     const resetBoard = [];
