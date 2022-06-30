@@ -1,5 +1,6 @@
 import "./Navbar.scss";
 import Timer from "../Timer/Timer";
+import arrow from "../../assets/images/arrow.svg";
 function Navbar(props) {
   return (
     <>
@@ -16,7 +17,7 @@ function Navbar(props) {
                     props.algo(event.target.value);
                   }}
                 >
-                  <option className="option" selected disabled >
+                  <option className="option" selected disabled>
                     Algorithm
                   </option>
                   <option className="option" value="DFS">
@@ -29,27 +30,25 @@ function Navbar(props) {
               </div>
             </li>
             <li className="list__item">
-            <select
-                  className="select speed"
-                  name="speed"
-                  id="speed"
-                  onChange={(event) => {
-                    props.setSpeed(parseInt(event.target.value));
-                  }}
-                >
-                  <option className="option" >
-                    Speed
-                  </option>
-                  <option className="option" value="10">
-                    Fast
-                  </option>
-                  <option className="option" value="50">
-                    Medium
-                  </option>
-                  <option className="option" value="100">
-                    Slow
-                  </option>
-                </select>
+              <select
+                className="select speed"
+                name="speed"
+                id="speed"
+                onChange={(event) => {
+                  props.setSpeed(parseInt(event.target.value));
+                }}
+              >
+                <option className="option">Speed</option>
+                <option className="option" value="10">
+                  Fast
+                </option>
+                <option className="option" value="50">
+                  Medium
+                </option>
+                <option className="option" value="100">
+                  Slow
+                </option>
+              </select>
             </li>
 
             <li className="list__item" onClick={props.solve}>
@@ -59,12 +58,15 @@ function Navbar(props) {
             <li className="list__item" onClick={props.start}>
               New
             </li>
-            {!props.complete ? <li className="list__item" onClick={props.clear}>
-              Stop
-            </li> : <li className="list__item" onClick={props.reset}>
-              Reset
-            </li>}
-            
+            {!props.complete ? (
+              <li className="list__item" onClick={props.clear}>
+                Stop
+              </li>
+            ) : (
+              <li className="list__item" onClick={props.reset}>
+                Reset
+              </li>
+            )}
           </ul>
         </div>
       ) : (
@@ -90,6 +92,7 @@ function Navbar(props) {
                     Hard
                   </option>
                 </select>
+                <img src={arrow} className="arrow" alt="" />
               </div>
             </li>
             <li className="list__item" onClick={props.clear}>
@@ -108,7 +111,9 @@ function Navbar(props) {
             <li className="list__item" onClick={props.check}>
               Check
             </li>
-            <li className="list__item" onClick={props.submit}>Submit</li>
+            <li className="list__item" onClick={props.submit}>
+              Submit
+            </li>
           </ul>
         </div>
       )}
